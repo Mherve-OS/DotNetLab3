@@ -1,0 +1,47 @@
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        x:Class="StockTrack.Avalonia.Views.LoginWindow"
+        Title="Wholesale Inventory Management System - User Login"
+        Width="520" Height="460"
+        MinWidth="440" MinHeight="400"
+        CanResize="False"
+        WindowStartupLocation="CenterScreen">
+
+    <Grid Background="#EAEAEA">
+        <!-- Clean Centered Login Card -->
+        <Border Margin="24" Background="White" CornerRadius="0" BorderBrush="#B0B0B0" BorderThickness="1" Padding="28,24" VerticalAlignment="Center">
+            <StackPanel Spacing="14">
+                <!-- Header -->
+                <StackPanel Spacing="3">
+                    <TextBlock Text="Wholesale Inventory Management System" FontSize="18" FontWeight="Bold" Foreground="#222222"/>
+                    <TextBlock Text="User Login" FontSize="13" Foreground="#555555"/>
+                </StackPanel>
+
+                <Separator Background="#CCCCCC" Margin="0,2"/>
+
+                <!-- Error Message Banner -->
+                <Border x:Name="PnlError" Background="#FFF5F5" BorderBrush="#D9534F" BorderThickness="1" CornerRadius="0" Padding="10,8" IsVisible="False">
+                    <TextBlock x:Name="TxtError" Foreground="#CC0000" FontSize="12" FontWeight="Bold" TextWrapping="Wrap"/>
+                </Border>
+
+                <!-- Username Field -->
+                <StackPanel Spacing="4">
+                    <TextBlock Text="Username:" FontWeight="Bold" FontSize="13" Foreground="#333333"/>
+                    <TextBox x:Name="TxtUsername" Watermark="Enter username" CornerRadius="0" Height="36" FontSize="13" VerticalContentAlignment="Center" Padding="8,4"/>
+                </StackPanel>
+
+                <!-- Password Field -->
+                <StackPanel Spacing="4">
+                    <TextBlock Text="Password:" FontWeight="Bold" FontSize="13" Foreground="#333333"/>
+                    <TextBox x:Name="TxtPassword" PasswordChar="●" Watermark="Enter password" CornerRadius="0" Height="36" FontSize="13" VerticalContentAlignment="Center" Padding="8,4"/>
+                </StackPanel>
+
+                <!-- Log In Action Button -->
+                <Button x:Name="BtnLogin" Content="Log In" Background="#2B579A" Foreground="White"
+                        BorderThickness="0" CornerRadius="0"
+                        HorizontalAlignment="Stretch" HorizontalContentAlignment="Center" Height="38"
+                        FontSize="13" FontWeight="Bold" Margin="0,8,0,0" Cursor="Hand" Click="BtnLogin_Click"/>
+            </StackPanel>
+        </Border>
+    </Grid>
+</Window>

@@ -1,0 +1,380 @@
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        x:Class="StockTrack.Avalonia.Views.MainWindow"
+        Title="Wholesale Inventory Management System"
+        Width="1280" Height="800"
+        MinWidth="1024" MinHeight="680"
+        Background="#F0F0F0"
+        WindowStartupLocation="CenterScreen">
+
+    <Grid RowDefinitions="Auto,*">
+        <!-- Top Application Header -->
+        <Border Grid.Row="0" Background="#2B579A" Padding="16,10" CornerRadius="0">
+            <Grid ColumnDefinitions="Auto,*,Auto">
+                <!-- Branding Left -->
+                <TextBlock Grid.Column="0" Text="Wholesale Inventory Management System" FontSize="16" FontWeight="Bold" Foreground="White" VerticalAlignment="Center"/>
+
+                <!-- User Session & Logout Right -->
+                <StackPanel Grid.Column="2" Orientation="Horizontal" Spacing="14" VerticalAlignment="Center">
+                    <TextBlock x:Name="TxtCurrentUser" Text="Logged in as: User (Role)" Foreground="White" VerticalAlignment="Center" FontSize="12"/>
+                    <Button x:Name="BtnLogout" Content="Log Out" Background="#D9534F" Foreground="White"
+                            BorderThickness="0" CornerRadius="0"
+                            Padding="12,5" FontWeight="Bold" FontSize="11" Cursor="Hand" Click="BtnLogout_Click"/>
+                </StackPanel>
+            </Grid>
+        </Border>
+
+        <!-- Main Tab Navigation -->
+        <TabControl x:Name="MainTabs" Grid.Row="1" Margin="8,4,8,8">
+            <!-- TAB 1: DASHBOARD -->
+            <TabItem Header="Dashboard">
+                <Grid RowDefinitions="Auto,Auto,*" Margin="4">
+                    <!-- Segment 1: Summary Metric Cards -->
+                    <Grid Grid.Row="0" ColumnDefinitions="*,*,*,*" Margin="0,0,0,8">
+                        <!-- Total Active Products -->
+                        <Border Grid.Column="0" Background="White" BorderBrush="#B0B0B0" BorderThickness="1" CornerRadius="0" Padding="14,10" Margin="0,0,6,0">
+                            <Grid RowDefinitions="Auto,Auto,Auto">
+                                <TextBlock Grid.Row="0" Text="TOTAL ACTIVE PRODUCTS" Foreground="#555555" FontSize="11" FontWeight="Bold"/>
+                                <TextBlock Grid.Row="1" x:Name="TxtTotalProducts" Text="0" FontSize="26" FontWeight="Bold" Foreground="#1E3A8A" Margin="0,4,0,2"/>
+                                <TextBlock Grid.Row="2" Text="Active catalog items" FontSize="11" Foreground="#777777"/>
+                            </Grid>
+                        </Border>
+
+                        <!-- Low Stock Warnings -->
+                        <Border Grid.Column="1" Background="#FFF5F5" BorderBrush="#FFCCCC" BorderThickness="1" CornerRadius="0" Padding="14,10" Margin="3,0,3,0">
+                            <Grid RowDefinitions="Auto,Auto,Auto">
+                                <TextBlock Grid.Row="0" Text="LOW STOCK WARNINGS" Foreground="#990000" FontSize="11" FontWeight="Bold"/>
+                                <TextBlock Grid.Row="1" x:Name="TxtLowStockCount" Text="0" FontSize="26" FontWeight="Bold" Foreground="#CC0000" Margin="0,4,0,2"/>
+                                <TextBlock Grid.Row="2" Text="Stock at or below reorder level" FontSize="11" Foreground="#990000"/>
+                            </Grid>
+                        </Border>
+
+                        <!-- Total Warehouse Stock Units -->
+                        <Border Grid.Column="2" Background="#F5FFF5" BorderBrush="#CCFFCC" BorderThickness="1" CornerRadius="0" Padding="14,10" Margin="3,0,3,0">
+                            <Grid RowDefinitions="Auto,Auto,Auto">
+                                <TextBlock Grid.Row="0" Text="TOTAL WAREHOUSE UNITS" Foreground="#006600" FontSize="11" FontWeight="Bold"/>
+                                <TextBlock Grid.Row="1" x:Name="TxtTotalUnits" Text="0" FontSize="26" FontWeight="Bold" Foreground="#008800" Margin="0,4,0,2"/>
+                                <TextBlock Grid.Row="2" Text="Total inventory units on hand" FontSize="11" Foreground="#006600"/>
+                            </Grid>
+                        </Border>
+
+                        <!-- System Status & Refresh -->
+                        <Border Grid.Column="3" Background="White" BorderBrush="#B0B0B0" BorderThickness="1" CornerRadius="0" Padding="14,10" Margin="6,0,0,0">
+                            <Grid RowDefinitions="Auto,Auto,Auto">
+                                <TextBlock Grid.Row="0" Text="STATUS" Foreground="#555555" FontSize="11" FontWeight="Bold"/>
+                                <TextBlock Grid.Row="1" x:Name="TxtLastRefreshed" Text="Ready" FontSize="12" FontWeight="SemiBold" Foreground="#333333" Margin="0,6,0,4"/>
+                                <Button Grid.Row="2" Content="Refresh Data" Background="#E1E1E1" Foreground="Black"
+                                        BorderBrush="#707070" BorderThickness="1" CornerRadius="0"
+                                        Padding="10,3" FontSize="11" FontWeight="Bold" Cursor="Hand" Click="BtnRefreshDashboard_Click"/>
+                            </Grid>
+                        </Border>
+                    </Grid>
+
+                    <!-- Segment 2: Segment Toolbar / View Switcher -->
+                    <Border Grid.Row="1" Background="White" BorderBrush="#B0B0B0" BorderThickness="1" CornerRadius="0" Padding="8,6" Margin="0,0,0,8">
+                        <Grid ColumnDefinitions="Auto,Auto,Auto,Auto,*,Auto,Auto">
+                            <TextBlock Grid.Column="0" Text="Segment View:" FontSize="12" FontWeight="Bold" Foreground="#333333" VerticalAlignment="Center" Margin="0,0,10,0"/>
+
+                            <Button Grid.Column="1" x:Name="BtnViewSplit" Content="Split View" Background="#2B579A" Foreground="White"
+                                    BorderThickness="0" CornerRadius="0" Padding="12,5" FontSize="12" FontWeight="Bold" Margin="0,0,6,0" Cursor="Hand" Click="BtnViewSplit_Click"/>
+
+                            <Button Grid.Column="2" x:Name="BtnViewLowStock" Content="Low Stock" Background="#E1E1E1" Foreground="#333333"
+                                    BorderBrush="#707070" BorderThickness="1" CornerRadius="0" Padding="12,5" FontSize="12" Margin="0,0,6,0" Cursor="Hand" Click="BtnViewLowStock_Click"/>
+
+                            <Button Grid.Column="3" x:Name="BtnViewTransactions" Content="Stock Movements" Background="#E1E1E1" Foreground="#333333"
+                                    BorderBrush="#707070" BorderThickness="1" CornerRadius="0" Padding="12,5" FontSize="12" Cursor="Hand" Click="BtnViewTransactions_Click"/>
+
+                            <!-- Quick Action Shortcuts -->
+                            <Button Grid.Column="5" x:Name="BtnQuickRestock" Content="New Stock Movement" Background="#E1E1E1" Foreground="Black"
+                                    BorderBrush="#707070" BorderThickness="1" CornerRadius="0" Padding="12,5" FontSize="12" FontWeight="Bold" Margin="0,0,6,0" Cursor="Hand" Click="BtnQuickRestock_Click"/>
+
+                            <Button Grid.Column="6" x:Name="BtnQuickCatalog" Content="Product Catalog" Background="#E1E1E1" Foreground="Black"
+                                    BorderBrush="#707070" BorderThickness="1" CornerRadius="0" Padding="12,5" FontSize="12" Cursor="Hand" Click="BtnQuickCatalog_Click"/>
+                        </Grid>
+                    </Border>
+
+                    <!-- Segment 3: Dynamic Segment Content (Fits remaining screen space vertically!) -->
+                    <Grid Grid.Row="2">
+                        <!-- SEGMENT MODE A: Side-by-Side Fitted Split View -->
+                        <Grid x:Name="PnlSegmentSplit" ColumnDefinitions="*,*" Margin="0">
+                            <!-- Left Fitted Segment: Low Stock Alerts -->
+                            <Border Grid.Column="0" Background="White" BorderBrush="#B0B0B0" BorderThickness="1" CornerRadius="0" Padding="10" Margin="0,0,4,0">
+                                <Grid RowDefinitions="Auto,*">
+                                    <Grid Grid.Row="0" ColumnDefinitions="Auto,*,Auto" Margin="0,0,0,6">
+                                        <TextBlock Grid.Column="0" Text="Low Stock Items (Restock Required)" FontWeight="Bold" FontSize="12" Foreground="#990000" VerticalAlignment="Center"/>
+                                        <TextBlock Grid.Column="1" x:Name="TxtLowStockSplitBadge" Text="0 items" FontSize="11" FontWeight="Bold" Foreground="#CC0000" Margin="8,0,0,0" VerticalAlignment="Center"/>
+                                        <Button Grid.Column="2" Content="Focus View" Background="#E1E1E1" BorderBrush="#707070" BorderThickness="1" CornerRadius="0" Padding="8,2" FontSize="11" Click="BtnViewLowStock_Click"/>
+                                    </Grid>
+                                    <DataGrid Grid.Row="1" x:Name="GridLowStock" AutoGenerateColumns="False" IsReadOnly="True" GridLinesVisibility="Horizontal" HeadersVisibility="Column" VerticalAlignment="Stretch"/>
+                                </Grid>
+                            </Border>
+
+                            <!-- Right Fitted Segment: Recent Stock Movements -->
+                            <Border Grid.Column="1" Background="White" BorderBrush="#B0B0B0" BorderThickness="1" CornerRadius="0" Padding="10" Margin="4,0,0,0">
+                                <Grid RowDefinitions="Auto,*">
+                                    <Grid Grid.Row="0" ColumnDefinitions="*,Auto" Margin="0,0,0,6">
+                                        <TextBlock Grid.Column="0" Text="Recent Stock Movements" FontWeight="Bold" FontSize="12" Foreground="#222222" VerticalAlignment="Center"/>
+                                        <Button Grid.Column="1" Content="Focus View" Background="#E1E1E1" BorderBrush="#707070" BorderThickness="1" CornerRadius="0" Padding="8,2" FontSize="11" Click="BtnViewTransactions_Click"/>
+                                    </Grid>
+                                    <DataGrid Grid.Row="1" x:Name="GridRecentTransactions" AutoGenerateColumns="False" IsReadOnly="True" GridLinesVisibility="Horizontal" HeadersVisibility="Column" VerticalAlignment="Stretch"/>
+                                </Grid>
+                            </Border>
+                        </Grid>
+
+                        <!-- SEGMENT MODE B: Low Stock Priority Segment (Full Screen Focus) -->
+                        <Border x:Name="PnlSegmentLowStock" Background="White" BorderBrush="#B0B0B0" BorderThickness="1" CornerRadius="0" Padding="10" IsVisible="False">
+                            <Grid RowDefinitions="Auto,*">
+                                <Grid Grid.Row="0" ColumnDefinitions="Auto,*,Auto,Auto" Margin="0,0,0,8">
+                                    <TextBlock Grid.Column="0" Text="Low Stock Items - Detailed View" FontWeight="Bold" FontSize="13" Foreground="#990000" VerticalAlignment="Center"/>
+                                    <TextBlock Grid.Column="1" x:Name="TxtLowStockFullBadge" Text="0 items" FontSize="11" FontWeight="Bold" Foreground="#CC0000" Margin="10,0,0,0" VerticalAlignment="Center"/>
+                                    <Button Grid.Column="2" Content="Back to Split View" Background="#E1E1E1" BorderBrush="#707070" BorderThickness="1" CornerRadius="0" Padding="10,3" FontSize="11" Margin="0,0,6,0" Click="BtnViewSplit_Click"/>
+                                    <Button Grid.Column="3" Content="New Stock Movement" Background="#E1E1E1" BorderBrush="#707070" BorderThickness="1" CornerRadius="0" Padding="10,3" FontSize="11" FontWeight="Bold" Click="BtnQuickRestock_Click"/>
+                                </Grid>
+                                <DataGrid Grid.Row="1" x:Name="GridLowStockFull" AutoGenerateColumns="False" IsReadOnly="True" GridLinesVisibility="Horizontal" HeadersVisibility="Column" VerticalAlignment="Stretch"/>
+                            </Grid>
+                        </Border>
+
+                        <!-- SEGMENT MODE C: Recent Stock Movements Segment (Full Screen Focus) -->
+                        <Border x:Name="PnlSegmentTransactions" Background="White" BorderBrush="#B0B0B0" BorderThickness="1" CornerRadius="0" Padding="10" IsVisible="False">
+                            <Grid RowDefinitions="Auto,*">
+                                <Grid Grid.Row="0" ColumnDefinitions="Auto,*,Auto,Auto" Margin="0,0,0,8">
+                                    <TextBlock Grid.Column="0" Text="Stock Movements - Detailed View" FontWeight="Bold" FontSize="13" Foreground="#222222" VerticalAlignment="Center"/>
+                                    <TextBlock Grid.Column="1" x:Name="TxtTransactionsFullBadge" Text="Recent transactions" FontSize="11" FontWeight="Bold" Foreground="#333333" Margin="10,0,0,0" VerticalAlignment="Center"/>
+                                    <Button Grid.Column="2" Content="Back to Split View" Background="#E1E1E1" BorderBrush="#707070" BorderThickness="1" CornerRadius="0" Padding="10,3" FontSize="11" Margin="0,0,6,0" Click="BtnViewSplit_Click"/>
+                                    <Button Grid.Column="3" Content="New Stock Movement" Background="#E1E1E1" BorderBrush="#707070" BorderThickness="1" CornerRadius="0" Padding="10,3" FontSize="11" FontWeight="Bold" Click="BtnQuickRestock_Click"/>
+                                </Grid>
+                                <DataGrid Grid.Row="1" x:Name="GridRecentTransactionsFull" AutoGenerateColumns="False" IsReadOnly="True" GridLinesVisibility="Horizontal" HeadersVisibility="Column" VerticalAlignment="Stretch"/>
+                            </Grid>
+                        </Border>
+                    </Grid>
+                </Grid>
+            </TabItem>
+
+            <!-- TAB 2: PRODUCTS -->
+            <TabItem Header="Products">
+                <Grid RowDefinitions="Auto,Auto,*" Margin="4">
+                    <!-- Search Header -->
+                    <Border Grid.Row="0" Background="White" BorderBrush="#B0B0B0" BorderThickness="1" CornerRadius="0" Padding="8" Margin="0,0,0,6">
+                        <Grid ColumnDefinitions="Auto,*,Auto,Auto">
+                            <TextBlock Text="Search Catalog:" VerticalAlignment="Center" Margin="0,0,8,0" FontWeight="Bold" FontSize="12"/>
+                            <TextBox x:Name="TxtProductSearch" Grid.Column="1" Watermark="Search by SKU, product name, category or vendor..." CornerRadius="0" Height="28" Margin="0,0,6,0"/>
+                            <Button Grid.Column="2" Content="Search" Background="#E1E1E1" Foreground="Black" BorderBrush="#707070" BorderThickness="1" CornerRadius="0" Padding="12,3" Click="BtnSearchProduct_Click" Margin="0,0,4,0"/>
+                            <Button Grid.Column="3" Content="Reset" Background="#E1E1E1" Foreground="Black" BorderBrush="#707070" BorderThickness="1" CornerRadius="0" Padding="12,3" Click="BtnResetProductSearch_Click"/>
+                        </Grid>
+                    </Border>
+
+                    <!-- Product Details Form -->
+                    <Border Grid.Row="1" Background="White" BorderBrush="#B0B0B0" BorderThickness="1" CornerRadius="0" Padding="10" Margin="0,0,0,6">
+                        <StackPanel Spacing="6">
+                            <TextBlock Text="Product Details Entry" FontWeight="Bold" FontSize="12" Foreground="#222222"/>
+
+                            <Grid ColumnDefinitions="*,2*,*,*" RowDefinitions="Auto,Auto">
+                                <StackPanel Grid.Row="0" Grid.Column="0" Margin="0,0,6,4">
+                                    <TextBlock Text="SKU / Item Code:" Margin="0,0,0,2" FontSize="11" FontWeight="Bold"/>
+                                    <TextBox x:Name="TxtSKU" Watermark="e.g. WHL-001" CornerRadius="0" Height="28"/>
+                                </StackPanel>
+
+                                <StackPanel Grid.Row="0" Grid.Column="1" Margin="0,0,6,4">
+                                    <TextBlock Text="Product Description:" Margin="0,0,0,2" FontSize="11" FontWeight="Bold"/>
+                                    <TextBox x:Name="TxtProductName" Watermark="e.g. Super White Sugar (50kg Bag)" CornerRadius="0" Height="28"/>
+                                </StackPanel>
+
+                                <StackPanel Grid.Row="0" Grid.Column="2" Margin="0,0,6,4">
+                                    <TextBlock Text="Category:" Margin="0,0,0,2" FontSize="11" FontWeight="Bold"/>
+                                    <ComboBox x:Name="CboCategory" HorizontalAlignment="Stretch" CornerRadius="0" Height="28"/>
+                                </StackPanel>
+
+                                <StackPanel Grid.Row="0" Grid.Column="3" Margin="0,0,0,4">
+                                    <TextBlock Text="Vendor / Supplier:" Margin="0,0,0,2" FontSize="11" FontWeight="Bold"/>
+                                    <ComboBox x:Name="CboSupplier" HorizontalAlignment="Stretch" CornerRadius="0" Height="28"/>
+                                </StackPanel>
+
+                                <StackPanel Grid.Row="1" Grid.Column="0" Margin="0,0,6,0">
+                                    <TextBlock Text="Unit Price ($):" Margin="0,0,0,2" FontSize="11" FontWeight="Bold"/>
+                                    <TextBox x:Name="TxtUnitPrice" Watermark="0.00" CornerRadius="0" Height="28"/>
+                                </StackPanel>
+
+                                <StackPanel Grid.Row="1" Grid.Column="1" Margin="0,0,6,0">
+                                    <TextBlock Text="Initial Quantity:" Margin="0,0,0,2" FontSize="11" FontWeight="Bold"/>
+                                    <TextBox x:Name="TxtQuantity" Watermark="0" CornerRadius="0" Height="28"/>
+                                </StackPanel>
+
+                                <StackPanel Grid.Row="1" Grid.Column="2" Margin="0,0,6,0">
+                                    <TextBlock Text="Reorder Threshold:" Margin="0,0,0,2" FontSize="11" FontWeight="Bold"/>
+                                    <TextBox x:Name="TxtReorderLevel" Text="10" CornerRadius="0" Height="28"/>
+                                </StackPanel>
+
+                                <!-- Action Buttons (Hidden for Staff role) -->
+                                <StackPanel x:Name="PnlProductActions" Grid.Row="1" Grid.Column="3" Orientation="Horizontal" Spacing="4" VerticalAlignment="Bottom">
+                                    <Button Content="Save" Background="#E1E1E1" Foreground="Black" BorderBrush="#707070" BorderThickness="1" CornerRadius="0" Padding="10,4" FontWeight="Bold" Click="BtnSaveProduct_Click"/>
+                                    <Button Content="Update" Background="#E1E1E1" Foreground="Black" BorderBrush="#707070" BorderThickness="1" CornerRadius="0" Padding="10,4" Click="BtnUpdateProduct_Click"/>
+                                    <Button Content="Delete" Background="#D9534F" Foreground="White" BorderBrush="#B52B27" BorderThickness="1" CornerRadius="0" Padding="10,4" Click="BtnDeleteProduct_Click"/>
+                                    <Button Content="Clear" Background="#E1E1E1" Foreground="Black" BorderBrush="#707070" BorderThickness="1" CornerRadius="0" Padding="8,4" Click="BtnClearProduct_Click"/>
+                                </StackPanel>
+                            </Grid>
+                        </StackPanel>
+                    </Border>
+
+                    <!-- Products Table -->
+                    <Border Grid.Row="2" Background="White" BorderBrush="#B0B0B0" BorderThickness="1" CornerRadius="0">
+                        <DataGrid x:Name="GridProducts" AutoGenerateColumns="False" IsReadOnly="True"
+                                  SelectionMode="Single" SelectionChanged="GridProducts_SelectionChanged"
+                                  GridLinesVisibility="Horizontal" HeadersVisibility="Column" VerticalAlignment="Stretch"/>
+                    </Border>
+                </Grid>
+            </TabItem>
+
+            <!-- TAB 3: STOCK MOVEMENTS -->
+            <TabItem Header="Stock Movements">
+                <Grid RowDefinitions="Auto,*" Margin="4">
+                    <Border Grid.Row="0" Background="White" BorderBrush="#B0B0B0" BorderThickness="1" CornerRadius="0" Padding="10" Margin="0,0,0,6">
+                        <StackPanel Spacing="8">
+                            <TextBlock Text="Record Inward / Outward Stock Movement" FontWeight="Bold" FontSize="12" Foreground="#222222"/>
+
+                            <Grid ColumnDefinitions="*,*,*,*" Margin="0,2">
+                                <StackPanel Grid.Column="0" Margin="0,0,6,0">
+                                    <TextBlock Text="Select Product:" Margin="0,0,0,2" FontSize="11" FontWeight="Bold"/>
+                                    <ComboBox x:Name="CboStockProduct" HorizontalAlignment="Stretch" CornerRadius="0" Height="28"/>
+                                </StackPanel>
+
+                                <StackPanel Grid.Column="1" Margin="0,0,6,0">
+                                    <TextBlock Text="Movement Type:" Margin="0,0,0,2" FontSize="11" FontWeight="Bold"/>
+                                    <ComboBox x:Name="CboTransactionType" HorizontalAlignment="Stretch" CornerRadius="0" Height="28">
+                                        <ComboBoxItem Content="STOCK IN (Goods Received / Restock)" IsSelected="True"/>
+                                        <ComboBoxItem Content="STOCK OUT (Customer Dispatch / Sales)"/>
+                                        <ComboBoxItem Content="ADJUSTMENT (Damage / Spoilage / Physical Count)"/>
+                                    </ComboBox>
+                                </StackPanel>
+
+                                <StackPanel Grid.Column="2" Margin="0,0,6,0">
+                                    <TextBlock Text="Quantity:" Margin="0,0,0,2" FontSize="11" FontWeight="Bold"/>
+                                    <TextBox x:Name="TxtStockQuantity" Watermark="e.g. 10" CornerRadius="0" Height="28"/>
+                                </StackPanel>
+
+                                <StackPanel Grid.Column="3">
+                                    <TextBlock Text="Reference / Note:" Margin="0,0,0,2" FontSize="11" FontWeight="Bold"/>
+                                    <TextBox x:Name="TxtStockReason" Watermark="GRN / Waybill / note..." CornerRadius="0" Height="28"/>
+                                </StackPanel>
+                            </Grid>
+
+                            <StackPanel Orientation="Horizontal" Spacing="10" Margin="0,2">
+                                <CheckBox x:Name="ChkAdminNegativeOverride" Content="Allow Negative Stock (Administrator Override)"/>
+                                <Button Content="Record Movement" Background="#E1E1E1" Foreground="Black"
+                                        BorderBrush="#707070" BorderThickness="1" CornerRadius="0" Padding="14,4" FontWeight="Bold" Click="BtnPostStock_Click"/>
+                                <Button Content="Clear" Background="#E1E1E1" Foreground="Black"
+                                        BorderBrush="#707070" BorderThickness="1" CornerRadius="0" Padding="10,4" Click="BtnClearStock_Click"/>
+                            </StackPanel>
+                        </StackPanel>
+                    </Border>
+
+                    <Border Grid.Row="1" Background="White" BorderBrush="#B0B0B0" BorderThickness="1" CornerRadius="0" Padding="8">
+                        <Grid RowDefinitions="Auto,*">
+                            <TextBlock Grid.Row="0" Text="Warehouse Movement Audit Ledger" FontWeight="Bold" FontSize="12" Foreground="#222222" Margin="0,0,0,6"/>
+                            <DataGrid Grid.Row="1" x:Name="GridStockTransactions" AutoGenerateColumns="False" IsReadOnly="True" GridLinesVisibility="Horizontal" HeadersVisibility="Column" VerticalAlignment="Stretch"/>
+                        </Grid>
+                    </Border>
+                </Grid>
+            </TabItem>
+
+            <!-- TAB 4: REPORTS -->
+            <TabItem x:Name="TabReports" Header="Reports">
+                <Grid RowDefinitions="Auto,*" Margin="4">
+                    <Border Grid.Row="0" Background="White" BorderBrush="#B0B0B0" BorderThickness="1" CornerRadius="0" Padding="8" Margin="0,0,0,6">
+                        <Grid ColumnDefinitions="Auto,*,Auto,Auto" VerticalAlignment="Center">
+                            <TextBlock Text="Select Report:" VerticalAlignment="Center" Margin="0,0,8,0" FontWeight="Bold" FontSize="12"/>
+                            <ComboBox x:Name="CboReportType" Grid.Column="1" HorizontalAlignment="Stretch" CornerRadius="0" Height="28" Margin="0,0,6,0">
+                                <ComboBoxItem Content="Current Stock Valuation and Status Report" IsSelected="True"/>
+                                <ComboBoxItem Content="Stock Movement and Dispatch History" />
+                                <ComboBoxItem Content="Low-Stock Urgent Reorder Procurement List"/>
+                                <ComboBoxItem Content="Vendor Supply and Item Summary"/>
+                            </ComboBox>
+                            <Button Grid.Column="2" Content="Run Report" Background="#E1E1E1" Foreground="Black"
+                                    BorderBrush="#707070" BorderThickness="1" CornerRadius="0" Padding="12,4" FontWeight="Bold" Click="BtnRunReport_Click" Margin="0,0,4,0"/>
+                            <Button Grid.Column="3" Content="Export to CSV" Background="#E1E1E1" Foreground="Black"
+                                    BorderBrush="#707070" BorderThickness="1" CornerRadius="0" Padding="12,4" Click="BtnExportCsv_Click"/>
+                        </Grid>
+                    </Border>
+
+                    <Border Grid.Row="1" Background="White" BorderBrush="#B0B0B0" BorderThickness="1" CornerRadius="0" Padding="8">
+                        <DataGrid x:Name="GridReports" AutoGenerateColumns="False" IsReadOnly="True" GridLinesVisibility="Horizontal" HeadersVisibility="Column" VerticalAlignment="Stretch"/>
+                    </Border>
+                </Grid>
+            </TabItem>
+
+            <!-- TAB 5: VENDORS & CATEGORIES -->
+            <TabItem x:Name="TabSuppliersCategories" Header="Vendors &amp; Categories">
+                <Grid ColumnDefinitions="*,*" Margin="4">
+                    <Border Grid.Column="0" Background="White" BorderBrush="#B0B0B0" BorderThickness="1" CornerRadius="0" Padding="10" Margin="0,0,4,0">
+                        <Grid RowDefinitions="Auto,*">
+                            <TextBlock Grid.Row="0" Text="Product Categories" FontWeight="Bold" FontSize="12" Foreground="#222222" Margin="0,0,0,6"/>
+                            <DataGrid Grid.Row="1" x:Name="GridCategories" AutoGenerateColumns="False" IsReadOnly="True" GridLinesVisibility="Horizontal" HeadersVisibility="Column" VerticalAlignment="Stretch"/>
+                        </Grid>
+                    </Border>
+
+                    <Border Grid.Column="1" Background="White" BorderBrush="#B0B0B0" BorderThickness="1" CornerRadius="0" Padding="10" Margin="4,0,0,0">
+                        <Grid RowDefinitions="Auto,*">
+                            <TextBlock Grid.Row="0" Text="Vendor / Supplier Directory" FontWeight="Bold" FontSize="12" Foreground="#222222" Margin="0,0,0,6"/>
+                            <DataGrid Grid.Row="1" x:Name="GridSuppliers" AutoGenerateColumns="False" IsReadOnly="True" GridLinesVisibility="Horizontal" HeadersVisibility="Column" VerticalAlignment="Stretch"/>
+                        </Grid>
+                    </Border>
+                </Grid>
+            </TabItem>
+
+            <!-- TAB 6: USER ACCOUNTS (ADMIN ONLY) -->
+            <TabItem x:Name="TabUsers" Header="User Accounts">
+                <Grid RowDefinitions="Auto,Auto,*" Margin="4">
+                    <Border Grid.Row="0" Background="White" BorderBrush="#B0B0B0" BorderThickness="1" CornerRadius="0" Padding="8" Margin="0,0,0,6">
+                        <StackPanel Spacing="2">
+                            <TextBlock Text="User Accounts Administration (Administrator Access)" FontWeight="Bold" FontSize="12" Foreground="#222222"/>
+                            <TextBlock Text="Manage user accounts, roles, and account statuses." Foreground="#666666" FontSize="11"/>
+                        </StackPanel>
+                    </Border>
+
+                    <!-- User Input Form -->
+                    <Border Grid.Row="1" Background="White" BorderBrush="#B0B0B0" BorderThickness="1" CornerRadius="0" Padding="10" Margin="0,0,0,6">
+                        <StackPanel Spacing="6">
+                            <Grid ColumnDefinitions="*,*,*,*" Margin="0,0,0,4">
+                                <StackPanel Grid.Column="0" Margin="0,0,6,0">
+                                    <TextBlock Text="Username:" Margin="0,0,0,2" FontSize="11" FontWeight="Bold"/>
+                                    <TextBox x:Name="TxtUserUsername" Watermark="e.g. jsmith" CornerRadius="0" Height="28"/>
+                                </StackPanel>
+                                <StackPanel Grid.Column="1" Margin="0,0,6,0">
+                                    <TextBlock Text="Full Name:" Margin="0,0,0,2" FontSize="11" FontWeight="Bold"/>
+                                    <TextBox x:Name="TxtUserFullName" Watermark="e.g. John Smith" CornerRadius="0" Height="28"/>
+                                </StackPanel>
+                                <StackPanel Grid.Column="2" Margin="0,0,6,0">
+                                    <TextBlock Text="Role:" Margin="0,0,0,2" FontSize="11" FontWeight="Bold"/>
+                                    <ComboBox x:Name="CboUserRole" HorizontalAlignment="Stretch" CornerRadius="0" Height="28">
+                                        <ComboBoxItem Content="Admin"/>
+                                        <ComboBoxItem Content="Inventory Manager"/>
+                                        <ComboBoxItem Content="Staff" IsSelected="True"/>
+                                    </ComboBox>
+                                </StackPanel>
+                                <StackPanel Grid.Column="3">
+                                    <TextBlock Text="Password:" Margin="0,0,0,2" FontSize="11" FontWeight="Bold"/>
+                                    <TextBox x:Name="TxtUserPassword" PasswordChar="●" Watermark="Min 6 characters" CornerRadius="0" Height="28"/>
+                                </StackPanel>
+                            </Grid>
+
+                            <StackPanel Orientation="Horizontal" Spacing="6">
+                                <CheckBox x:Name="ChkUserIsActive" Content="Active Account" IsChecked="True"/>
+                                <Button Content="Create User" Background="#E1E1E1" Foreground="Black" BorderBrush="#707070" BorderThickness="1" CornerRadius="0" Padding="10,4" FontWeight="Bold" Click="BtnCreateUser_Click"/>
+                                <Button Content="Update User" Background="#E1E1E1" Foreground="Black" BorderBrush="#707070" BorderThickness="1" CornerRadius="0" Padding="10,4" Click="BtnUpdateUser_Click"/>
+                                <Button Content="Toggle Active/Deactivate" Background="#E1E1E1" Foreground="Black" BorderBrush="#707070" BorderThickness="1" CornerRadius="0" Padding="10,4" Click="BtnToggleUserActive_Click"/>
+                                <Button Content="Delete" Background="#D9534F" Foreground="White" BorderBrush="#B52B27" BorderThickness="1" CornerRadius="0" Padding="10,4" Click="BtnDeleteUser_Click"/>
+                                <Button Content="Clear" Background="#E1E1E1" Foreground="Black" BorderBrush="#707070" BorderThickness="1" CornerRadius="0" Padding="8,4" Click="BtnClearUser_Click"/>
+                            </StackPanel>
+                        </StackPanel>
+                    </Border>
+
+                    <!-- Users Table -->
+                    <Border Grid.Row="2" Background="White" BorderBrush="#B0B0B0" BorderThickness="1" CornerRadius="0" Padding="8">
+                        <DataGrid x:Name="GridUsers" AutoGenerateColumns="False" IsReadOnly="True"
+                                  SelectionMode="Single" SelectionChanged="GridUsers_SelectionChanged"
+                                  GridLinesVisibility="Horizontal" HeadersVisibility="Column" VerticalAlignment="Stretch"/>
+                    </Border>
+                </Grid>
+            </TabItem>
+        </TabControl>
+    </Grid>
+</Window>

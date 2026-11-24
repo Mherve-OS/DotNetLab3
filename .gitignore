@@ -1,0 +1,27 @@
+# Build results
+[Bb]in/
+[Oo]bj/
+[Ll]og/
+[Ll]ogs/
+
+# User-specific files
+*.rsuser
+*.suo
+*.user
+*.userosscache
+*.sln.docstates
+
+# macOS files
+.DS_Store
+.AppleDouble
+.LSOverride
+
+# IDE / Editor folders
+.idea/
+.vscode/
+*.DotSettings.user
+
+# Avalonia temporary directories
+.avalonia-build-tasks/
+.local/
+Library/
